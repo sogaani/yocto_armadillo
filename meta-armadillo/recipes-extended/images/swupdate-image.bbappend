@@ -1,6 +1,8 @@
 INITRAMFS_FSTYPES = "cpio.gz"
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 
+IMAGE_INSTALL += " udev"
+
 # ビルドで使うコマンドを依存に追加
 DEPENDS += "u-boot-mkimage-native" 
 
