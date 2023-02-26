@@ -34,7 +34,7 @@ PROVIDES = "virtual/kernel"
 ## KERNEL_MODULE_AUTOLOAD +=
 
 # ビルドで使うコマンドを依存に追加
-DEPENDS += "lzop-native" 
+DEPENDS += "lzop-native u-boot-mkimage-native" 
 
 do_patch:append () {
     # Copy firmware to kernel src
@@ -42,5 +42,6 @@ do_patch:append () {
     cp -r ${WORKDIR}/firmware ${S}/prebuilds/
 }
 
-UBOOT_ENTRYPOINT = "0x80008000"
-UBOOT_LOADADDRESS = "0x80008000"
+UBOOT_ENTRYPOINT = "0x82000000"
+UBOOT_LOADADDRESS = "0x82000000"
+KERNEL_EXTRA_ARGS += "LOADADDR=${UBOOT_ENTRYPOINT}"
