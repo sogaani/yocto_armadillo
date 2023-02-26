@@ -33,9 +33,10 @@ https://mickey-happygolucky.hatenablog.com/entry/2018/12/25/135954
 nmcli device wifi con gamera-g password dphses0203; apt update; apt install -y openssh-server u-boot-tools; useradd -m sogaani; echo "05046295\n05046295\n" | passwd sogaani; echo "sogaani   ALL=(ALL:ALL) ALL" >> /etc/sudoers; chsh -s /bin/bash sogaani
 
 apt-get install -y u-boot-tools
-echo "/dev/mmcblk2boot0           0xe0000         0x20000" >> /etc/fw_env.config
+echo "/dev/mmcblk2boot0           0xe0000         0x2000" >> /etc/fw_env.config
 
 ## uboot環境変数書き換え
+事前にuboot内でsaveenvってやっておかないとデフォルトの環境変数でいろいろ上書きされちゃう
 sudo sh -c "echo 0 > /sys/block/mmcblk2boot0/force_ro"
 fw_setenv [variable name] [variable value]
 sudo sh -c "echo 1 > /sys/block/mmcblk2boot0/force_ro"
