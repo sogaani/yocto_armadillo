@@ -10,8 +10,6 @@ require recipes-kernel/linux/linux-yocto.inc
 LINUX_VERSION ?= "4.9"
 COMPATIBLE_MACHINE = 'armadillo-g3'
 
-CCFLAGS = "-Wno-address"
-
 SRC_URI = " \
     https://armadillo.atmark-techno.com/files/downloads/armadillo-iot-g3/source/linux-4.9-x1-at28.tar.gz;name=kernel_source \
     file://001_resolve_dtc_build_error.patch;patch=1 \
