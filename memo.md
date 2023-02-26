@@ -71,5 +71,4 @@ run mmcboot
 
 ## install
 
-swupdate -i /mnt/update-image-armadillo-g3-20230226113939.swu -H armadillo-g
-3-m1:1.0  -v
+swupdate -i /mnt/update-image-armadillo-g3-20230226113939.swu -H armadillo-g3-m1:1.0  -v
