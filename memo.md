@@ -72,3 +72,20 @@ run mmcboot
 ## install
 
 swupdate -i /mnt/update-image-armadillo-g3-20230226113939.swu -H armadillo-g3-m1:1.0  -v
+swupdate -d "-u http://172.16.10.12/update-image-armadillo-g3-20230227110610.swu" -H armadillo-g3-m1:1.0  -v
+
+* https://manpages.debian.org/experimental/swupdate/swupdate.1.en.html
+
+## 無線LAN接続
+ifconfig wlan0 up
+
+/etc/wpa_supplicant.conf 書き換え
+network={
+        ssid="gamera-g"
+        psk="dphses0203"
+}
+
+wpa_supplicant -iwlan0 -Dwext -c/etc/wpa_supplicant.conf &
+
+dhcpの場合
+dhclient wlan0

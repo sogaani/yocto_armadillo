@@ -1,10 +1,16 @@
 INITRAMFS_FSTYPES = "cpio.gz"
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 
-IMAGE_INSTALL += " udev"
+IMAGE_INSTALL:append = " \
+  udev \
+  dbus \
+  curl \
+  networkmanager \
+  networkmanager-nmcli \
+"
 
 # ビルドで使うコマンドを依存に追加
-DEPENDS += "u-boot-mkimage-native" 
+DEPENDS += "u-boot-mkimage-native"
 
 UBOOT_ARCH ?= "arm"
 

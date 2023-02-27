@@ -14,8 +14,10 @@ fi
 
 echo 0 > /proc/sys/kernel/printk
 
-# /dev以下にデバイスファイルを生成するために、udevを起動
+# 各種サービス起動
 /etc/init.d/udev start
+/etc/init.d/dbus-1 start
+/etc/init.d/network-manager start
 
 # fw_env.configを作成
 echo "/dev/mmcblk2boot0           0xe0000         0x2000" > /etc/fw_env.config
