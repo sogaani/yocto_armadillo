@@ -5,8 +5,10 @@ IMAGE_INSTALL:append = " \
   udev \
   dbus \
   curl \
+  wpa-supplicant \
   networkmanager \
   networkmanager-nmcli \
+  networkmanager-wifi \
 "
 
 # ビルドで使うコマンドを依存に追加
