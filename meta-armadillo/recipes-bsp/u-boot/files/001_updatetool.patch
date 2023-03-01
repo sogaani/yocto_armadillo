@@ -1,0 +1,86 @@
+diff -r -u uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23-diff/include/configs/x1.h
+--- uboot_2016.07-at23/include/configs/x1.h	2022-03-24 16:16:11.000000000 +0900
++++ uboot_2016.07-at23-diff/include/configs/x1.h	2023-03-01 23:52:19.152275853 +0900
+@@ -130,10 +130,26 @@
+ 		"bootimg part 0 1;"\
+ 		"rootfs part 0 2\0" \
+ 
++
++#define CONFIG_ALT_BOMMAND \
++	"initramfs_addr=0x86000000\0" \
++	"loadinitramfs=" \
++	    "fatload mmc 1:3 ${initramfs_addr} uRamdisk\0" \
++    "altbootcmd=" \
++	    "run loadimage; " \
++		"run loadfdt; " \
++		"run loadinitramfs; " \
++		"setenv bootargs console=${console},${baudrate}; " \
++		"saveenv; " \
++		"bootm ${loadaddr} ${initramfs_addr} ${fdt_addr}; \0"
++
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	CONFIG_MFG_ENV_SETTINGS \
+ 	UPDATE_M4_ENV \
+ 	CONFIG_VIDEO_MODE \
++	CONFIG_ALT_BOMMAND \
++	"updatefile=updateFirmware.conf\0" \
++	"bootlimit=3\0" \
+ 	"script=boot.scr\0" \
+ 	"image=uImage\0" \
+ 	"console=ttymxc4\0" \
+@@ -142,9 +158,13 @@
+ 	"fdt_addr=0x84800000\0" \
+ 	"boot_fdt=try\0" \
+ 	"ip_dyn=yes\0" \
++	"updatefilemmcpart=3\0" \
++	"updatefilemmcdev=1\0" \
+ 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
+ 	"mmcautodetect=yes\0" \
+ 	"optargs=\0" \
++	"loadupdateconf=" \
++		"ext4load mmc ${updatefilemmcdev}:${updatefilemmcpart} ${loadaddr} ${updatefile}\0" \
+ 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
+ 		"root=${mmcroot} ${optargs}\0" \
+ 	"loadbootscript=" \
+@@ -157,15 +177,18 @@
+ 		"run mmcargs; " \
+ 		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+ 			"if run loadfdt; then " \
++		        "saveenv; " \
+ 				"bootm ${loadaddr} - ${fdt_addr}; " \
+ 			"else " \
+ 				"if test ${boot_fdt} = try; then " \
++		            "saveenv; " \
+ 					"bootm; " \
+ 				"else " \
+ 					"echo WARN: Cannot load the DT; " \
+ 				"fi; " \
+ 			"fi; " \
+ 		"else " \
++		    "saveenv; " \
+ 			"bootm; " \
+ 		"fi;\0" \
+ 	"netargs=setenv bootargs console=${console},${baudrate} " \
+@@ -195,6 +218,9 @@
+ 
+ #define CONFIG_BOOTCOMMAND \
+ 	   "mmc dev ${mmcdev};" \
++	   "if run loadupdateconf; then " \
++	       "run altbootcmd; " \
++	   "fi; " \
+ 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
+ 		   "if run loadbootscript; then " \
+ 			   "run bootscript; " \
+@@ -307,4 +333,12 @@
+ int is_maintenance_mode(void);
+ #endif
+ 
++/* Enable bootcount */
++#define CONFIG_BOOTCOUNT_LIMIT
++#define CONFIG_BOOTCOUNT_ENV
++
++/* Address and size of Redundant Environment Sector	*/
++#define CONFIG_ENV_OFFSET_REDUND	(CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE)
++#define CONFIG_ENV_SIZE_REDUND	CONFIG_ENV_SIZE
++
+ #endif	/* __CONFIG_H */
