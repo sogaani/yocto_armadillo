@@ -21,6 +21,7 @@ echo 0 > /proc/sys/kernel/printk
 
 # fw_env.configを作成
 echo "/dev/mmcblk2boot0           0xe0000         0x2000" > /etc/fw_env.config
+echo "/dev/mmcblk2boot0           0xe2000         0x2000" >> /etc/fw_env.config
 
 mount_usb() {
 	found=0
