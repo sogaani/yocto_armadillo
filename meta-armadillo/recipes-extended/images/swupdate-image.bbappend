@@ -5,6 +5,7 @@ IMAGE_INSTALL:append = " \
   udev \
   dbus \
   curl \
+  u-boot-fw-utils \
   wpa-supplicant \
   networkmanager \
   networkmanager-nmcli \
