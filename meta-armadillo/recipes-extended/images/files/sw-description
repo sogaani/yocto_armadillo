@@ -11,6 +11,7 @@ software =
                 compressed = "zlib";
                 installed-directly = true;
                 device = "/dev/mmcblk2p2";
+                sha256 = "$swupdate_get_sha256(rootfs-image-armadillo-iot-g3-m1.ext4.gz)";
             }
         );
         files: (
@@ -18,13 +19,15 @@ software =
                     filename = "uImage";
                     path = "/uImage";
                     device = "/dev/mmcblk2p1";
-                    filesystem = "vfat"
+                    filesystem = "vfat";
+                    sha256 = "$swupdate_get_sha256(uImage)";
             },
             {
                     filename = "armadillo_iotg_g3_m1.dtb";
                     path = "/armadillo_iotg_g3_m1.dtb";
                     device = "/dev/mmcblk2p1";
-                    filesystem = "vfat"
+                    filesystem = "vfat";
+                    sha256 = "$swupdate_get_sha256(armadillo_iotg_g3_m1.dtb)";
             }
         );
 	}

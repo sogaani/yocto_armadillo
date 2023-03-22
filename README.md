@@ -18,6 +18,8 @@
   * pyenv経由でpythonを使うとビルドに失敗するので、pyenvを使っている場合は無効化してください。
 * localeを`en_US.UTF-8`にする
   * ubuntu22の場合: `sudo update-locale LANG=en_US.UTF-8`
+* 次のコマンドでs3から機密ファイルをダウンロードする(awsコマンドのセットアップをしておくこと)
+  * `AWS_PROFILE=rsi-infra-dev aws s3 sync s3://riot-development-dev/confidential/gateway-update/ build/files/confidential`
 
 ## 各イメージのビルド方法
 

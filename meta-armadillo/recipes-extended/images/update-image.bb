@@ -26,3 +26,8 @@ IMAGE_DEPENDS = "rootfs-image"
 SWUPDATE_IMAGES = "rootfs-image"
 
 SWUPDATE_IMAGES_FSTYPES[rootfs-image] = ".ext4.gz"
+
+SWUPDATE_SIGNING = "RSA"
+
+SWUPDATE_PRIVATE_KEY = "${TOPDIR}/files/confidential/swupdate_private.pem"
+SWUPDATE_PASSWORD_FILE = "${TOPDIR}/files/confidential/passphrase"

@@ -77,7 +77,7 @@ read_updates() {
 
 cmd_swupdate() {
 	echo "SWUpdate from $1"
-	swupdate -d  "-u $1" -H $HARDWARE-$MODEL_NAME:1.0 -v
+	swupdate -k /etc/swupdate_public.pem -d "-u $1" -H $HARDWARE-$MODEL_NAME:1.0 -v
 	return $?
 }
 
