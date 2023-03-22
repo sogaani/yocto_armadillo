@@ -24,13 +24,19 @@ echo 0 > /proc/sys/kernel/printk
 # 乱数生成を早くできるようにするためのサービス(wifi接続とかに必要)
 /etc/init.d/rng-tools start
 
-reboot() {
+cmd_reboot() {
+	sync
 	umount_ext4
 	/etc/init.d/network-manager stop
 	/etc/init.d/dbus-1 stop
 	/etc/init.d/udev stop
 	/etc/init.d/rng-tools stop
-	exit 0
+
+	while [ 1 ]; do
+		echo "Rebooting the system !"
+		reboot -f
+		sleep 60
+	done
 }
 
 mount_ext4() {
@@ -39,7 +45,7 @@ mount_ext4() {
 }
 
 umount_ext4() {
-	mount /dev/mmcblk2p3 ${MNT_DIR} 2>/dev/null
+	umount ${MNT_DIR} 2>/dev/null
 	return $?
 }
 
@@ -76,7 +82,7 @@ cmd_swupdate() {
 }
 
 fetch_download_url() {
-	updateFilePath=$(wget -O - "${UPDATE_ENDPOINT%/}/${CHANNEL}/gateway-os/${HARDWARE}/${MODEL_NAME}/osUpdate.json" | jq -r '.updateFilePath')
+	updateFilePath=$(wget -O - "${UPDATE_ENDPOINT%/}/gateway-os/${CHANNEL}/${HARDWARE}/${MODEL_NAME}/metadata.json" | jq -r '.updateFilePath')
 	if [ -n "$updateFilePath" ];then
 		echo "${UPDATE_ENDPOINT%/}/${updateFilePath#/}"
 		return 0
@@ -132,8 +138,7 @@ while [ 1 ];do
 	# reboot if failed over 60 times
 	if [ $count -gt 60 ]; then
 	    echo "Failed to connect network"
-	    echo "reboot the system !"
-		reboot
+		cmd_reboot
 	fi
 done
 
@@ -144,7 +149,7 @@ if [ $? == 0 ];then
 	echo "SUCCESS !"
 else
 	echo "FAILURE !"
-	reboot
+	cmd_reboot
 fi
 
 ## 後処理
@@ -152,5 +157,4 @@ if [ -f "${MNT_DIR}/osVersionUpdate.conf" ]; then
 	mv ${MNT_DIR}/osVersionUpdate.conf ${MNT_DIR}/osVersion.conf
 fi
 fw_setenv upgrade_available 1
-echo "reboot the system !"
-reboot
+cmd_reboot
