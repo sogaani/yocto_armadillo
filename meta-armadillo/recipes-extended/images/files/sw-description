@@ -1,0 +1,31 @@
+software =
+{
+	version = "@@OS_VERSION@@";
+
+	armadillo-iot-g3-m1 = {
+		hardware-compatibility: [ "1.0"];
+        images: (
+            {
+                filename = "rootfs-image-armadillo-iot-g3-m1.ext4.gz";
+                type = "raw";
+                compressed = "zlib";
+                installed-directly = true;
+                device = "/dev/mmcblk2p2";
+            }
+        );
+        files: (
+            {
+                    filename = "uImage";
+                    path = "/uImage";
+                    device = "/dev/mmcblk2p1";
+                    filesystem = "vfat"
+            },
+            {
+                    filename = "armadillo_iotg_g3_m1.dtb";
+                    path = "/armadillo_iotg_g3_m1.dtb";
+                    device = "/dev/mmcblk2p1";
+                    filesystem = "vfat"
+            }
+        );
+	}
+}

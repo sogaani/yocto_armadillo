@@ -1,0 +1,156 @@
+#!/bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MNT_DIR=/mnt
+
+umask 022
+mount -t proc proc /proc
+mount sysfs /sys -t sysfs
+if [ -e /proc/cpu/alignment ]; then
+# 1: warn．例外発生を dmesg に出力
+# 2: fixup．例外発生の命令を解釈し，メモリアクセスのつじつまを合わせる
+   echo "3" > /proc/cpu/alignment
+fi
+
+# カーネルのログを抑制
+echo 0 > /proc/sys/kernel/printk
+
+# 各種サービス起動
+# NetworkMnagerに必要なサービス
+/etc/init.d/udev start
+/etc/init.d/dbus-1 start
+# ネットワーク接続に必要なサービス
+/etc/init.d/network-manager start
+# 乱数生成を早くできるようにするためのサービス(wifi接続とかに必要)
+/etc/init.d/rng-tools start
+
+reboot() {
+	umount_ext4
+	/etc/init.d/network-manager stop
+	/etc/init.d/dbus-1 stop
+	/etc/init.d/udev stop
+	/etc/init.d/rng-tools stop
+	exit 0
+}
+
+mount_ext4() {
+	mount /dev/mmcblk2p3 ${MNT_DIR} 2>/dev/null
+	return $?
+}
+
+umount_ext4() {
+	mount /dev/mmcblk2p3 ${MNT_DIR} 2>/dev/null
+	return $?
+}
+
+connect_wifi() {
+	${MNT_DIR}/bin/connect_wifi.sh
+	return $?
+}
+
+connect_ethernet() {
+	${MNT_DIR}/bin/connect_ethernet.sh
+	return $?
+}
+
+check_networkconnection() {
+	echo "wget -q --spider $1"
+	wget -q --spider $1
+	return $?
+}
+
+read_update_channel() {
+	export $(cat ${MNT_DIR}/updateChannel.conf | xargs)
+	return $?
+}
+
+read_updates() {
+	export $(cat ${MNT_DIR}/osVersionUpdate.conf | xargs)
+	return $?
+}
+
+cmd_swupdate() {
+	echo "SWUpdate from $1"
+	swupdate -d  "-u $1" -H $HARDWARE-$MODEL_NAME:1.0 -v
+	return $?
+}
+
+fetch_download_url() {
+	updateFilePath=$(wget -O - "${UPDATE_ENDPOINT%/}/${CHANNEL}/gateway-os/${HARDWARE}/${MODEL_NAME}/osUpdate.json" | jq -r '.updateFilePath')
+	if [ -n "$updateFilePath" ];then
+		echo "${UPDATE_ENDPOINT%/}/${updateFilePath#/}"
+		return 0
+	else
+	    return 1
+	fi
+}
+
+echo "Checking for application software"
+echo "---------------------------------"
+echo "  "
+
+while [ 1 ];do
+	echo "Mounting data partition"
+	sleep 3
+
+	mount_ext4
+	if [ $? == 0 ];then
+		break
+	fi
+done
+
+## アップデートファイルの決定
+read_update_channel
+read_updates
+if [ $? == 0 ];then
+    # アップデートが指定されている指定されているURLからアップデートファイルを取得する
+	download_url=${DOWNLOAD_PATH}
+fi
+
+## アップデートサーバーにアクセスできるようになるまでネットワーク接続を試みる
+count=0
+while [ 1 ];do
+	echo "Connecting network"
+	# 乱数生成を早くできるようにするためのサービスを再起動
+	# 起動済みだが、/dev/hwrngが未生成だった場合起動に失敗するため、再起動しておく
+	/etc/init.d/rng-tools restart
+	sleep 10
+
+	connect_ethernet
+	connect_wifi
+
+    # アップデートが指定されてない場合最新のアップデートを取得する
+	if [ -z "$download_url" ]; then
+		download_url=`fetch_download_url`
+	fi
+	echo $download_url
+	check_networkconnection $download_url
+	if [ $? == 0 ];then
+		break
+	fi
+	count=$((count+1))
+	# reboot if failed over 60 times
+	if [ $count -gt 60 ]; then
+	    echo "Failed to connect network"
+	    echo "reboot the system !"
+		reboot
+	fi
+done
+
+## アップデート処理
+cmd_swupdate ${download_url}
+
+if [ $? == 0 ];then
+	echo "SUCCESS !"
+else
+	echo "FAILURE !"
+	reboot
+fi
+
+## 後処理
+if [ -f "${MNT_DIR}/osVersionUpdate.conf" ]; then
+	mv ${MNT_DIR}/osVersionUpdate.conf ${MNT_DIR}/osVersion.conf
+fi
+fw_setenv upgrade_available 1
+echo "reboot the system !"
+reboot
