@@ -4,6 +4,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += " \
     file://enable-download.cfg \
     file://enable-signed-image.cfg \
+    file://enable-encrypted-image.cfg \
 "
 DEPENDS += " curl"
 RDEPENDS:${PN} += "libgcc"
@@ -11,4 +12,5 @@ RDEPENDS:${PN} += "libgcc"
 do_install:append () {
 	install -d ${D}/${sysconfdir}
 	install -m 600 ${TOPDIR}/files/confidential/swupdate_public.pem ${D}/${sysconfdir}/
+	install -m 600 ${TOPDIR}/files/confidential/swupdate_aes_key ${D}/${sysconfdir}/
 }

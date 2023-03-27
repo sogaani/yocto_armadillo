@@ -80,7 +80,7 @@ read_updates() {
 
 cmd_swupdate() {
 	echo "SWUpdate from $1"
-	swupdate -k /etc/swupdate_public.pem -d "-u $1" -H $HARDWARE-$MODEL_NAME:1.0 -v
+	swupdate -K /etc/swupdate_aes_key -k /etc/swupdate_public.pem -d "-u $1" -H $HARDWARE-$MODEL_NAME:1.0 -v
 	return $?
 }
 

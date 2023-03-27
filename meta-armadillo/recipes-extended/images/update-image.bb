@@ -25,7 +25,7 @@ IMAGE_DEPENDS = "rootfs-image"
 # images and files that will be included in the .swu image
 SWUPDATE_IMAGES = "rootfs-image"
 
-SWUPDATE_IMAGES_FSTYPES[rootfs-image] = ".ext4.gz"
+SWUPDATE_IMAGES_FSTYPES[rootfs-image] = ".ext4.gz.enc"
 
 SWUPDATE_SIGNING = "RSA"
 

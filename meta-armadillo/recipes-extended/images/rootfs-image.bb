@@ -13,7 +13,8 @@ SRC_URI[rootfs.md5sum] := "${ROOTFS_TAR_GZ_MD5}"
 ## 何もインストールしない
 IMAGE_INSTALL = ""
 PACKAGE_INSTALL = ""
-IMAGE_FSTYPES = "ext4.gz"
+IMAGE_FSTYPES = "ext4.gz.enc"
+SWUPDATE_AES_FILE = "${TOPDIR}/files/confidential/swupdate_aes"
 
 python __anonymous() {
     d.delVarFlag("do_fetch", "noexec")
@@ -28,4 +29,4 @@ make_rootfs () {
     tar --extract --no-same-owner -z -f ${ROOTFS_FILEPATH}
 }
 
-inherit image
+inherit image swupdate-enc
