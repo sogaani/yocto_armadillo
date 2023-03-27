@@ -26,7 +26,7 @@ ROOTFS_POSTPROCESS_COMMAND = "make_rootfs;"
 
 make_rootfs () {
     cd ${IMAGE_ROOTFS}
-    tar --extract --no-same-owner -z -f ${ROOTFS_FILEPATH}
+    tar --extract --same-owner -z -f ${ROOTFS_FILEPATH}
 }
 
 inherit image swupdate-enc
