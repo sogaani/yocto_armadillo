@@ -60,8 +60,11 @@ connect_ethernet() {
 }
 
 check_networkconnection() {
-	echo "wget -q --spider $1"
-	wget -q --spider $1
+	echo "curl --insecure -I $1"
+	# --insecureオプションをつけることで、sslの署名確認はしない
+	# これはOS更新ソフトの更新はしない設計であり、CA局の更新などに追従できないためである。
+	# swupdateもアップデートファイルのダウンロード時にはsslの署名確認はしていない
+	curl --insecure -I $1
 	return $?
 }
 
