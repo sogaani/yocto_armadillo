@@ -49,5 +49,10 @@ ROOTFS_TAR_GZ = "file://rootfs.tar.gz"
 ROOTFS_TAR_GZ_MD5 = "c3cd9cb07023e9a2e510e92270fb97b8"
 ## 今回のアップデートファイルのバージョンを設定する
 OS_VERSION="1.0.0"
+## ルートファイルシステムの各ファイルのタイムスタンプをUNIX time形式で設定する
+## 現在のUNIX timeを参照する場合は https://www.epochconverter.com/ にアクセスするとよい
+## 設定は任意
+export SOURCE_DATE_EPOCH = "1679978216"
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "1679978216"
 ```
 3. `bitbake update-image`を実行する
