@@ -128,6 +128,10 @@ while [ 1 ];do
 	connect_ethernet
 	connect_wifi
 
+	# ネットワーク接続後に時刻同期を行う
+	# AWSにアクセスするときに時刻が大きくずれていると、アクセスが拒否されるため
+	ntpdate pool.ntp.org
+
     # アップデートが指定されてない場合最新のアップデートを取得する
 	if [ -z "$download_url" ]; then
 		download_url=`fetch_download_url`

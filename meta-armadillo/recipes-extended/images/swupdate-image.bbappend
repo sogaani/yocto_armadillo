@@ -5,6 +5,7 @@ IMAGE_INSTALL:append = " \
   udev \
   dbus \
   curl \
+  ntpdate \
   jq \
   rng-tools \
   u-boot-fw-utils \
