@@ -85,9 +85,9 @@ cmd_swupdate() {
 }
 
 fetch_download_url() {
-	updateFilePath=$(wget -O - "${UPDATE_ENDPOINT%/}/gateway-os/${CHANNEL}/${HARDWARE}/${MODEL_NAME}/metadata.json" | jq -r '.updateFilePath')
-	if [ -n "$updateFilePath" ];then
-		echo "${UPDATE_ENDPOINT%/}/${updateFilePath#/}"
+	fullFilePath=$(wget -O - "${UPDATE_ENDPOINT%/}/gateway-os/${CHANNEL}/${HARDWARE}/${MODEL_NAME}/metadata.json" | jq -r '.fullFilePath')
+	if [ -n "$fullFilePath" ];then
+		echo "${UPDATE_ENDPOINT%/}/${fullFilePath#/}"
 		return 0
 	else
 	    return 1
