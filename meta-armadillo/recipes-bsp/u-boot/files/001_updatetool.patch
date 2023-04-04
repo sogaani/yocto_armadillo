@@ -1,6 +1,6 @@
-diff -ru uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23-diff/include/configs/x1.h
---- uboot_2016.07-at23/include/configs/x1.h	2023-03-07 21:36:00.900950712 +0900
-+++ uboot_2016.07-at23-diff/include/configs/x1.h	2023-03-07 21:35:25.060954996 +0900
+diff -ru uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23_diff/include/configs/x1.h
+--- uboot_2016.07-at23/include/configs/x1.h	2023-04-04 13:28:37.085465224 +0900
++++ uboot_2016.07-at23_diff/include/configs/x1.h	2023-04-04 13:30:48.614620627 +0900
 @@ -130,10 +130,33 @@
  		"bootimg part 0 1;"\
  		"rootfs part 0 2\0" \
@@ -68,7 +68,7 @@ diff -ru uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23-diff/include
  			"bootm; " \
  		"fi;\0" \
  	"netargs=setenv bootargs console=${console},${baudrate} " \
-@@ -195,21 +225,25 @@
+@@ -195,21 +225,26 @@
  
  #define CONFIG_BOOTCOMMAND \
  	   "mmc dev ${mmcdev};" \
@@ -105,11 +105,12 @@ diff -ru uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23-diff/include
 +					"fi; " \
 +				"fi; " \
 +			"else run netboot; fi; " \
-+	   "fi"
++	   "fi; " \
++	   "reset;"
  
  #define CONFIG_SYS_LOAD_ADDR		CONFIG_LOADADDR
  #define CONFIG_SYS_HZ			1000
-@@ -307,4 +341,12 @@
+@@ -307,4 +342,12 @@
  int is_maintenance_mode(void);
  #endif
  
@@ -122,3 +123,4 @@ diff -ru uboot_2016.07-at23/include/configs/x1.h uboot_2016.07-at23-diff/include
 +#define CONFIG_ENV_SIZE_REDUND	CONFIG_ENV_SIZE
 +
  #endif	/* __CONFIG_H */
+Only in uboot_2016.07-at23/: .rej
