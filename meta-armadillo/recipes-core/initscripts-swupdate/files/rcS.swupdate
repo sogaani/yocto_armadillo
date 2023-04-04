@@ -164,4 +164,5 @@ if [ -f "${MNT_DIR}/osVersionUpdate.conf" ]; then
 	mv ${MNT_DIR}/osVersionUpdate.conf ${MNT_DIR}/osVersion.conf
 fi
 fw_setenv upgrade_available 1
+fw_setenv bootcount 0
 cmd_reboot
