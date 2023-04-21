@@ -27,10 +27,13 @@ SWUPDATE_IMAGES = "rootfs-image"
 
 SWUPDATE_IMAGES_FSTYPES[rootfs-image] = ".ext4.gz.enc"
 
-SWUPDATE_SIGNING = "RSA"
+SWUPDATE_SIGNING = "CUSTOM"
 
 SWUPDATE_PRIVATE_KEY = "${TOPDIR}/files/confidential/swupdate_private_3072.pem"
 SWUPDATE_PASSWORD_FILE = "${TOPDIR}/files/confidential/passphrase"
+
+SWUPDATE_SIGN_TOOL = "openssl dgst -sha256 -sign ${SWUPDATE_PRIVATE_KEY} -sigopt rsa_padding_mode:pss \
+    -passin file:${SWUPDATE_PASSWORD_FILE} -sigopt rsa_pss_saltlen:-2 -out ${S}/sw-description.sig ${S}/sw-description "
 
 python do_swuimage:append() {
     import json
