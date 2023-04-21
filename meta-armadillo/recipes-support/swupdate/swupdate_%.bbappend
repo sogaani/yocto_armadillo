@@ -11,6 +11,6 @@ RDEPENDS:${PN} += "libgcc"
 
 do_install:append () {
 	install -d ${D}/${sysconfdir}
-	install -m 600 ${TOPDIR}/files/confidential/swupdate_public.pem ${D}/${sysconfdir}/
+	install -m 600 ${TOPDIR}/files/confidential/swupdate_public_3072.pem ${D}/${sysconfdir}/
 	install -m 600 ${TOPDIR}/files/confidential/swupdate_aes_key ${D}/${sysconfdir}/
 }

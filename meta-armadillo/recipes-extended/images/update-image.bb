@@ -29,7 +29,7 @@ SWUPDATE_IMAGES_FSTYPES[rootfs-image] = ".ext4.gz.enc"
 
 SWUPDATE_SIGNING = "RSA"
 
-SWUPDATE_PRIVATE_KEY = "${TOPDIR}/files/confidential/swupdate_private.pem"
+SWUPDATE_PRIVATE_KEY = "${TOPDIR}/files/confidential/swupdate_private_3072.pem"
 SWUPDATE_PASSWORD_FILE = "${TOPDIR}/files/confidential/passphrase"
 
 python do_swuimage:append() {
